@@ -31,4 +31,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-/*0SXwXpotR2WxDEhw3hcU7dFekb1iOWx7EjLv9rnmdmc=*/

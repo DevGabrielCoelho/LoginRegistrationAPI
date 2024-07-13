@@ -30,7 +30,6 @@ namespace LoginRegistrationAPI.Infrastructure.Repositories
                     _context.Users.Add(user);
                     _context.SaveChanges();
 
-                    // Certifique-se de que o Profile seja adicionado ao contexto apenas se for novo
                     if (user.Profile != null && user.Profile.Id == 0)
                     {
                         _context.Profiles.Add(user.Profile);
