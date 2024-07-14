@@ -2,6 +2,7 @@
 using LoginRegistrationAPI.Application.ViewModels;
 using LoginRegistrationAPI.Domain.Models.ProfileAggregate;
 using LoginRegistrationAPI.Domain.Models.UserAggregate;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LoginRegistrationAPI.Controllers
@@ -41,10 +42,20 @@ namespace LoginRegistrationAPI.Controllers
                 Profile = profile
             };
             user.Profile.User = user;
-            _userRepository.Register(user);
+
+            try
+            { 
+                _userRepository.Register(user); 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             return Ok();
         }
 
+        [Authorize]
         [HttpGet]
         [Route("getAll")]
         public IActionResult GetAll() 

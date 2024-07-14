@@ -2,8 +2,7 @@
 {
     public interface ISessionRepository
     {
-        void CreateSession();
-        void ValidateToken();
-        void InvalidateToken();
+        bool CreateSession(int userId, string token);
+        void InvalidateToken(int userId);
     }
 }

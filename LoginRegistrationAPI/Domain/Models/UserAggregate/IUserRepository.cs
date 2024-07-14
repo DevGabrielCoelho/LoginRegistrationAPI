@@ -5,7 +5,6 @@
         void Register(User user);
         void Login();
         void Logout();
-        void UpdateProfile();
         List<User> GetAll();
     }
 }

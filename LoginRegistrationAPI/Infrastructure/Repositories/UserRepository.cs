@@ -1,11 +1,16 @@
-﻿using LoginRegistrationAPI.Domain.Models.UserAggregate;
+﻿using LoginRegistrationAPI.Application.ViewModels;
+using LoginRegistrationAPI.Domain.Models.ProfileAggregate;
+using LoginRegistrationAPI.Domain.Models.UserAggregate;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LoginRegistrationAPI.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly ConnectionContext _context = new ConnectionContext();
+
         public List<User> GetAll()
         {
             return _context.Users.Include(u => u.Profile).Include(u => u.Profile.Sessions).ToList();
@@ -27,6 +32,13 @@ namespace LoginRegistrationAPI.Infrastructure.Repositories
             {
                 try
                 {
+                    
+                    if (user == null) throw new ArgumentNullException(nameof(user));
+                    if (_context.Users.Any(x => x.Email == user.Email)) 
+                        throw new InvalidOperationException(nameof(user.Email));
+                    if (_context.Users.Any(x => x.Profile.PhoneNumber == user.Profile.PhoneNumber)) 
+                        throw new InvalidDataException(nameof(user.Profile.PhoneNumber));
+                    
                     _context.Users.Add(user);
                     _context.SaveChanges();
 
@@ -38,6 +50,21 @@ namespace LoginRegistrationAPI.Infrastructure.Repositories
 
                     transaction.Commit();
                 }
+                catch (ArgumentNullException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("As informações não podem ser nulas", ex);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Esse email já foi utilizado!", ex);
+                }
+                catch (InvalidDataException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Esse numero já foi utilizado!", ex);
+                }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
@@ -46,9 +73,5 @@ namespace LoginRegistrationAPI.Infrastructure.Repositories
             }
         }
 
-        public void UpdateProfile()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
