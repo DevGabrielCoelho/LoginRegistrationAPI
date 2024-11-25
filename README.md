@@ -5,7 +5,8 @@ Este repositório contém a implementação de uma API para cadastro e autentica
 ## Estrutura do Repositório
 
 ```
-Application/
+LoginRegistrationAPI/
+├──Application/
 ├── Controllers/: Contém os controladores da API responsáveis pelas rotas.
 ├── Domain/Models/: Contém os modelos de dados, como usuário e autenticação.
 ├── Infrastructure/: Contém implementações relacionadas ao banco de dados e persistência de dados.
